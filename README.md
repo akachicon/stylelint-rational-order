@@ -1,112 +1,63 @@
-# stylelint-config-rational-order
+# stylelint-rational-order
 
-[![NPM version][version-img]][npm-url]
-[![NPM downloads][downloads-img]][npm-url]
-[![Build status][ci-img]][ci-url]
-[![License][l-img]][l-url]
+This package is a fork of [stylelint-config-rational-order](https://github.com/constverum/stylelint-config-rational-order/).
 
-Stylelint config that sorts related property declarations by grouping together following the order:
-
-1.  Positioning
-2.  Box Model
-3.  Typography
-4.  Visual
-5.  Animation
-6.  Misc
-
-```css
-.declaration-order {
-  /* Positioning */
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 10;
-
-  /* Box Model */
-  display: block;
-  float: right;
-  width: 100px;
-  height: 100px;
-  margin: 10px;
-  padding: 10px;
-
-  /* Typography */
-  color: #888;
-  font: normal 16px Helvetica, sans-serif;
-  line-height: 1.3;
-  text-align: center;
-
-  /* Visual */
-  background-color: #eee;
-  border: 1px solid #888;
-  border-radius: 4px;
-  opacity: 1;
-
-  /* Animation */
-  transition: all 1s;
-
-  /* Misc */
-  user-select: none;
-}
-```
+This version is designed to avoid use of internal api of another module and provide
+some new features. As a drawback it could only be used as a function in stylelintrc.js.
 
 ## Usage
 
-1.  Add `stylelint`, `stylelint-order` and this package to your project:
+1. Add `stylelint`, `stylelint-order` and this package to your project.
 
-```bash
-npm install --save-dev stylelint stylelint-order stylelint-config-rational-order
-# or, if you prefer yarn over npm:
-yarn add --dev stylelint stylelint-order stylelint-config-rational-order
-```
-
-2.  Add this package to the end of your extends array inside Stylelint
-    configuration (.stylelintrc for example):
+2. In your stylelintrc.js config add `stylelint-order` plugin and its `order/properties-order` rule
+like the following:
 
 ```javascript
 {
-  "extends": [
-    // "stylelint-config-standard",
-    "stylelint-config-rational-order"
-  ]
-}
-```
-
-This shareable config contains the following:
-```javascript
-{
-  "plugins": [
-    "stylelint-order",
-    "stylelint-config-rational-order/plugin"
+  plugins: [
+    'stylelint-order'
   ],
-  "rules": {
-    "order/properties-order": [],
-    "plugin/rational-order": [true, {
-      "border-in-box-model": false,
-      "empty-line-between-groups": false,
-    }]
+  rules: {
+    'order/properties-order': stylelintRationalOrder(generalOptions, specificOptions)
+  }
+}
+
+// or
+
+{
+  plugins: [
+    'stylelint-order'
+  ],
+  rules: {
+    'order/properties-order': [
+      stylelintRationalOrder(generalOptions, specificOptions),
+
+      // order/properties-order secondary options:
+      emptyLineMinimumPropertyThreshold: 4
+    ]
   }
 }
 ```
 
-Since it adds `stylelint-order` and `stylelint-config-rational-order` to plugins and also adds required rules, you don't have to do this yourself when extending this config.
+## General options
 
+General options object can have boolean `borderInBoxModel` field as well as any other primary
+option from [stylelint-order/properties-order](https://github.com/hudochenkov/stylelint-order/blob/master/rules/properties-order/README.md#options).
+Each option from this object except `borderInBoxModel` will be passed to every group.
 
-## Optional options / rules
-
-#### border-in-box-model
+#### borderInBoxModel
 
 Defines to which group the **border** property belongs to.
-
 If `true` **border** property belongs to the **box model section**.
 The default value is `false` (**border** property belongs to the **visual section**).
 
+## Specific options
 
-#### empty-line-between-groups
-
-If `true` adds an empty line between groups. The default value is `false`.
+Specific options object contains names of the groups with an option object for each group.
+There are following names: `positioning`, `boxModel`, `typography`, `visual`, `animation`,
+`misc`. Options object for a group contains the same fields as the group options object from
+[stylelint-order/properties-order](https://github.com/hudochenkov/stylelint-order/blob/master/rules/properties-order/README.md#options)
+plus `priority` field. The more the priority the closer a group should be to the top.
 
 ## FAQ
 
@@ -118,17 +69,3 @@ If `true` adds an empty line between groups. The default value is `false`.
 * [Happy Potter and the Order of CSS](https://dev.to/thekashey/happy-potter-and-the-order-of-css-5ec)
 * [“Outside In” — Ordering CSS Properties by Importance](https://webdesign.tutsplus.com/articles/outside-in-ordering-css-properties-by-importance--cms-21685)
 </details>
-
-## Credits
-
-* [Code Guide by @mdo](http://codeguide.co/)
-* [Code Guide by HTML Academy](https://github.com/htmlacademy/codeguide)
-
-
-[npm-url]: https://www.npmjs.com/package/stylelint-config-rational-order
-[downloads-img]: https://img.shields.io/npm/dt/stylelint-config-rational-order.svg?style=flat-square
-[version-img]: https://img.shields.io/npm/v/stylelint-config-rational-order.svg?style=flat-square
-[ci-url]: https://travis-ci.org/constverum/stylelint-config-rational-order
-[ci-img]: https://img.shields.io/travis/constverum/stylelint-config-rational-order.svg?style=flat-square
-[l-url]: https://www.npmjs.com/package/stylelint-config-rational-order
-[l-img]: https://img.shields.io/npm/l/stylelint-config-rational-order.svg?style=flat-square
